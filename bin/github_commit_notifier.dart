@@ -7,18 +7,17 @@ import 'notifier.dart';
 
 Future<void> main(List<String> arguments) async {
   await Notifier().notify(
-    appName: 'Flutter',
-    title: 'flutter/engine Commit',
-    body: 'Use package:litetest for flutter_frontend_server',
-    image: 'bin/logo_flutter_square_large.png',
-    url: 'https://github.com/flutter/engine/pull/26341',
-    onOpen: () async {
-      await openUrl('https://github.com/flutter/engine/pull/26341');
-    },
-    onClose: () {
-      print('Notification closed.');
-    }
-  );
+      appName: 'Flutter',
+      title: 'flutter/engine Commit',
+      body: 'Use package:litetest for flutter_frontend_server',
+      image: 'bin/logo_flutter_square_large.png',
+      url: 'https://github.com/flutter/engine/pull/26341',
+      onOpen: () async {
+        await openUrl('https://github.com/flutter/engine/pull/26341');
+      },
+      onClose: () {
+        print('Notification closed.');
+      });
 }
 
 /// Open the given URL in the user's default application for the URL's scheme.

@@ -12,7 +12,5 @@ class MacNotifier implements Notifier {
     String? url,
     dynamic Function()? onOpen,
     dynamic Function()? onClose,
-  }) async {
-
-  }
+  }) async {}
 }

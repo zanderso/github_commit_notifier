@@ -21,7 +21,8 @@ class LinuxNotifier implements Notifier {
   }) async {
     final d.NotificationsClient notificationsClient = d.NotificationsClient();
     try {
-      final List<String> capabilities = await notificationsClient.getCapabilities();
+      final List<String> capabilities =
+          await notificationsClient.getCapabilities();
       for (final String c in capabilities) {
         print('Capability: $c');
       }
@@ -52,19 +53,18 @@ class LinuxNotifier implements Notifier {
           done.complete();
         }
       }));
-      unawaited(notification.closeReason.then(
-        (d.NotificationClosedReason reason) async {
-          if (onClose != null) {
-            final dynamic onCloseResult = onClose();
-            if (onCloseResult is Future<dynamic>) {
-              await onCloseResult;
-            }
-          }
-          if (!done.isCompleted) {
-            done.complete();
+      unawaited(notification.closeReason
+          .then((d.NotificationClosedReason reason) async {
+        if (onClose != null) {
+          final dynamic onCloseResult = onClose();
+          if (onCloseResult is Future<dynamic>) {
+            await onCloseResult;
           }
         }
-      ));
+        if (!done.isCompleted) {
+          done.complete();
+        }
+      }));
       await done.future;
     } on Exception catch (e) {
       print('Failed to notify: $e');
