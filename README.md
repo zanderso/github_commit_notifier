@@ -10,6 +10,6 @@ https://github.com/julienXX/terminal-notifier
 $ brew install terminal-notifier
 $ ./terminal-notifier.app/Contents/MacOS/terminal-notifier
 ```
- OR
+OR
 
- https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/DisplayNotifications.html
+https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/DisplayNotifications.html
