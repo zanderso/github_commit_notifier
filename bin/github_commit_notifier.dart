@@ -3,120 +3,15 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import 'package:desktop_notifications/desktop_notifications.dart' as d;
-import 'package:github/github.dart' as g;
-
-Future<void> _linuxNotify({
-  required String appName,
-  required String title,
-  required String body,
-  String? image,
-  dynamic Function()? onOpen,
-  dynamic Function()? onClose,
-}) async {
-  final d.NotificationsClient notificationsClient = d.NotificationsClient();
-  try {
-    final List<String> capabilities = await notificationsClient.getCapabilities();
-    for (final String c in capabilities) {
-      print('Capability: $c');
-    }
-
-    final io.File? icon = image != null ? io.File(image).absolute : null;
-    final d.Notification notification = await notificationsClient.notify(
-      title,
-      appName: appName,
-      body: body,
-      hints: <d.NotificationHint>[
-        d.NotificationHint.actionIcons(),
-        if (icon != null) d.NotificationHint.imagePath(icon.path),
-      ],
-      actions: <d.NotificationAction>[
-        d.NotificationAction('document-open', 'Open PR'),
-      ],
-    );
-
-    final Completer<void> done = Completer<void>();
-    notification.action.then((String action) async {
-      if (onOpen != null) {
-        final dynamic onOpenResult = onOpen();
-        if (onOpenResult is Future<dynamic>) {
-          await onOpenResult;
-        }
-      }
-      if (!done.isCompleted) {
-        done.complete();
-      }
-    });
-    notification.closeReason.then(
-      (d.NotificationClosedReason reason) async {
-        if (onClose != null) {
-          final dynamic onCloseResult = onClose();
-          if (onCloseResult is Future<dynamic>) {
-            await onCloseResult;
-          }
-        }
-        if (!done.isCompleted) {
-          done.complete();
-        }
-      }
-    );
-    await done.future;
-  } catch (e) {
-    print('Failed to notify: $e');
-  } finally {
-    notificationsClient.close();
-  }
-}
-
-Future<void> _windowsNotify({
-  required String appName,
-  required String title,
-  required String body,
-  String? image,
-  dynamic Function()? onOpen,
-  dynamic Function()? onClose,
-}) async {
-}
-
-Future<void> notify({
-  required String appName,
-  required String title,
-  required String body,
-  String? image,
-  dynamic Function()? onOpen,
-  dynamic Function()? onClose,
-}) async {
-  if (io.Platform.isLinux) {
-    await _linuxNotify(
-      appName: appName,
-      title: title,
-      body: body,
-      image: image,
-      onOpen: onOpen,
-      onClose: onClose,
-    );
-  } else if (io.Platform.isWindows) {
-    await _windowsNotify(
-      appName: appName,
-      title: title,
-      body: body,
-      image: image,
-      onOpen: onOpen,
-      onClose: onClose,
-    );
-  } else {
-    throw StateError(
-      'Platform "${io.Platform.operatingSystem}"" is not supported.',
-    );
-  }
-}
+import 'notifier.dart';
 
 Future<void> main(List<String> arguments) async {
-  await notify(
+  await Notifier().notify(
     appName: 'Flutter',
     title: 'flutter/engine Commit',
     body: 'Use package:litetest for flutter_frontend_server',
-    image: 'bin/logo_flutter_1080px_clr.png',
+    image: 'bin/logo_flutter_square_large.png',
+    url: 'https://github.com/flutter/engine/pull/26341',
     onOpen: () async {
       await openUrl('https://github.com/flutter/engine/pull/26341');
     },
@@ -124,47 +19,6 @@ Future<void> main(List<String> arguments) async {
       print('Notification closed.');
     }
   );
-
-  // final d.NotificationsClient notificationsClient = d.NotificationsClient();
-  // try {
-  //   final List<String> capabilities = await notificationsClient.getCapabilities();
-  //   for (final String c in capabilities) {
-  //     print('Capability: $c');
-  //   }
-
-  //   final io.File icon = io.File('bin/logo_flutter_1080px_clr.png').absolute;
-  //   final d.Notification notification = await notificationsClient.notify(
-  //     'flutter/engine Commit',
-  //     appName: 'Flutter',
-  //     body: 'Use package:litetest for flutter_frontend_server',
-  //     hints: <d.NotificationHint>[
-  //       d.NotificationHint.actionIcons(),
-  //       d.NotificationHint.imagePath(icon.path),
-  //     ],
-  //     actions: <d.NotificationAction>[
-  //       d.NotificationAction('document-open', 'Open PR'),
-  //     ],
-  //   );
-
-  //   final Completer<void> done = Completer<void>();
-  //   notification.action.then((String action) {
-  //     print('Action = $action');
-  //     openUrl('https://github.com/flutter/engine/pull/26341');
-  //     if (!done.isCompleted) {
-  //       done.complete();
-  //     }
-  //   });
-  //   notification.closeReason.then((d.NotificationClosedReason reason) {
-  //     print('Closed $reason');
-  //     if (!done.isCompleted) {
-  //       done.complete();
-  //     }
-  //   });
-  //   await done.future;
-  // } catch (e) {
-  //   print('Failed to notify: $e');
-  // }
-  // notificationsClient.close();
 }
 
 /// Open the given URL in the user's default application for the URL's scheme.
@@ -175,7 +29,7 @@ Future<void> main(List<String> arguments) async {
 /// A process is spawned to run that utility, with the [ProcessResult]
 /// being returned.
 Future<io.ProcessResult> openUrl(String url) {
-  return io.Process.run(_command, [url], runInShell: true);
+  return io.Process.run(_command, <String>[url], runInShell: true);
 }
 
 String get _command {

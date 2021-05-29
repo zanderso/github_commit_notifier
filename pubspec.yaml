@@ -10,6 +10,5 @@ environment:
 dependencies:
   desktop_notifications: any
   github: any
-
-dev_dependencies:
-  pedantic: ^1.10.0
+  path: any
+  pedantic: any
