@@ -101,7 +101,8 @@ class WindowsNotifier implements Notifier {
         ..createSync(recursive: true)
         ..writeAsStringSync(scriptBody);
       final io.File? imageFile = image == null ? null : io.File(image).absolute;
-      final String imageArg = imageFile == null ? '' : " -image '${imageFile.path}'";
+      final String imageArg =
+          imageFile == null ? '' : " -image '${imageFile.path}'";
       final String urlArg = url == null ? '' : " -url '$url'";
       final io.ProcessResult result = await io.Process.run(
         'powershell.exe',
