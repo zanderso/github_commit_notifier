@@ -4,7 +4,7 @@ import 'dart:io' as io;
 import 'package:desktop_notifications/desktop_notifications.dart' as d;
 import 'package:pedantic/pedantic.dart';
 
-import 'notifier.dart';
+import '../notifier.dart';
 
 class LinuxNotifier implements Notifier {
   LinuxNotifier();

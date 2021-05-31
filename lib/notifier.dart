@@ -1,8 +1,8 @@
 import 'dart:io' as io show Platform;
 
-import 'linux_notifier.dart';
-import 'mac_notifier.dart';
-import 'windows_notifier.dart';
+import 'src/linux_notifier.dart';
+import 'src/mac_notifier.dart';
+import 'src/windows_notifier.dart';
 
 abstract class Notifier {
   factory Notifier() {

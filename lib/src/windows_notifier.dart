@@ -2,7 +2,7 @@ import 'dart:io' as io;
 
 import 'package:path/path.dart' as path;
 
-import 'notifier.dart';
+import '../notifier.dart';
 
 class WindowsNotifier implements Notifier {
   WindowsNotifier();
