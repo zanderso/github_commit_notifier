@@ -1,6 +1,6 @@
 import 'dart:io' as io;
 
-import 'notifier.dart';
+import '../notifier.dart';
 
 class MacNotifier implements Notifier {
   MacNotifier();
